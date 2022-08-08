@@ -49,8 +49,32 @@ def delete_song_from_playlist():
             playlist.remove(file)
     song = playlist_box.curselection()
     playlist_box.delete(song)
-    
 
+def next_song():
+    current_song = playlist_box.curselection()
+    song = playlist_box.get(current_song[0]+1)
+    for file in playlist:
+        if file.find(song)>=0:
+            pygame.mixer.music.load(file)
+            pygame.mixer.music.play(loops=0)
+    
+    #move active bar in playlist
+    playlist_box.selection_clear(0,END)
+    playlist_box.activate(current_song[0]+1)
+    playlist_box.selection_set(current_song[0]+1,last=None)
+
+def prev_song():
+    current_song = playlist_box.curselection()
+    song = playlist_box.get(current_song[0]-1)
+    for file in playlist:
+        if file.find(song)>=0:
+            pygame.mixer.music.load(file)
+            pygame.mixer.music.play(loops=0)
+    
+    #move active bar in playlist
+    playlist_box.selection_clear(0,END)
+    playlist_box.activate(current_song[0]-1)
+    playlist_box.selection_set(current_song[0]-1,last=None)
 
 
 window = Tk()
@@ -76,8 +100,8 @@ pause_btn_img = PhotoImage(file='images/pause.png')
 add_btn_img = PhotoImage(file='images/add_song.png')
 delete_btn_img = PhotoImage(file='images/trash1.png')
 
-backward_btn = Button(controls_frame,image=backward_btn_img,borderwidth=0)
-forward_btn = Button(controls_frame,image=forward_btn_img,borderwidth=0)
+backward_btn = Button(controls_frame,image=backward_btn_img,borderwidth=0,command=prev_song)
+forward_btn = Button(controls_frame,image=forward_btn_img,borderwidth=0,command=next_song)
 play_btn = Button(controls_frame,image=play_btn_img,borderwidth=0,command=play_song)
 pause_btn = Button(controls_frame,image=pause_btn_img,borderwidth=0,command=lambda: pause_song(paused))
 stop_btn = Button(controls_frame,image=stop_btn_img,borderwidth=0,command=stop_song)
